@@ -1,0 +1,98 @@
+// Prisma schema for "کار" (Kar) — Afghanistan local jobs marketplace
+// Production datasource: PostgreSQL (Neon, Supabase, or any Postgres host).
+// See README.md for setup instructions and a free-tier provider list.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  JOBSEEKER
+  EMPLOYER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  phone        String   @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+
+  // Failed-login tracking for basic brute-force protection (see lib/rateLimit.js)
+  failedLoginCount Int       @default(0)
+  lockedUntil      DateTime?
+
+  seekerProfile SeekerProfile?
+  jobs          Job[]
+
+  @@index([phone])
+}
+
+model SeekerProfile {
+  id              String   @id @default(cuid())
+  name            String
+  city            String
+  skill           String
+  desc            String?
+  yearsExperience Int      @default(0)
+  createdAt       DateTime @default(now())
+
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String           @unique
+  experience WorkExperience[]
+  projects   Project[]
+
+  @@index([city])
+}
+
+model WorkExperience {
+  id       String @id @default(cuid())
+  company  String
+  jobTitle String
+  duration String
+  order    Int    @default(0)
+
+  seekerProfile   SeekerProfile @relation(fields: [seekerProfileId], references: [id], onDelete: Cascade)
+  seekerProfileId String
+
+  @@index([seekerProfileId])
+}
+
+model Project {
+  id          String  @id @default(cuid())
+  title       String
+  description String
+  link        String?
+  imageUrl    String?
+  order       Int     @default(0)
+
+  seekerProfile   SeekerProfile @relation(fields: [seekerProfileId], references: [id], onDelete: Cascade)
+  seekerProfileId String
+
+  @@index([seekerProfileId])
+}
+
+model Job {
+  id        String   @id @default(cuid())
+  title     String
+  biz       String
+  city      String
+  category  String
+  pay       String
+  desc      String
+  phone     String
+  urgent    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  employer   User   @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  employerId String
+
+  @@index([city])
+  @@index([category])
+  @@index([createdAt])
+}

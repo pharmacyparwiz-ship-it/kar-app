@@ -1,0 +1,13 @@
+{
+  "name": "کار — بازار کار محلی افغانستان",
+  "short_name": "کار",
+  "description": "کارجو و کارفرما را مستقیم به هم وصل می‌کنیم — بدون واسطه، بدون کمیشن.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#12181B",
+  "theme_color": "#12181B",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.env
+.env.local
+*.log
+prisma/dev.db
+prisma/dev.db-journal
+.DS_Store
+
+# Uploaded user files (not committed; only relevant for local/VPS storage mode)
+public/uploads/*
+!public/uploads/.gitkeep
